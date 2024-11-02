@@ -14,3 +14,9 @@ Projeto desenvolvido no segundo curso da formação Avançando com Java da Alura
 - Conhecer vários tipos de banco de dados e utilizar o PostgreSQL;
 - Trabalhar com vários tipos de consultas ao banco de dados;
 - Aprofundar na interface JPARepository
+
+## Como rodar o projeto?
+
+- Duplique o arquivo `config.properties.example` para `config.properties`
+- Coloque sua API KEY da OpenAi nele
+- Desce o beti!
