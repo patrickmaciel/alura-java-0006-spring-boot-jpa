@@ -2,16 +2,35 @@ package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.ConsultaChatGPT;
 import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import java.util.List;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name="series")
 public class Serie {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @Column(unique = true)
   private String titulo;
   private Integer totalTemporadas;
   private Double avaliacao;
+  @Enumerated(EnumType.STRING)
   private Categoria genero;
   private String atores;
   private String poster;
   private String sinopse;
+  @Transient
+  private List<Episodio> episodios;
 
   public Serie (DadosSerie dadoSerie) {
     this.titulo = dadoSerie.titulo();
@@ -20,8 +39,10 @@ public class Serie {
     this.genero = Categoria.fromString(dadoSerie.genero().split(",")[0].trim());
     this.atores = dadoSerie.atores();
     this.poster = dadoSerie.poster();
-    this.sinopse = ConsultaChatGPT.obterTraducao(dadoSerie.sinopse()).trim();
+    setSinopse(ConsultaChatGPT.obterTraducao(dadoSerie.sinopse()).trim());
   }
+
+  public Serie() {}
 
   public String getTitulo() {
     return titulo;
@@ -76,7 +97,11 @@ public class Serie {
   }
 
   public void setSinopse(String sinopse) {
-    this.sinopse = sinopse;
+    if (sinopse != null && sinopse.length() > 255) {
+      this.sinopse = sinopse.substring(0, 255);
+    } else {
+      this.sinopse = sinopse;
+    }
   }
 
   @Override
@@ -89,5 +114,21 @@ public class Serie {
         ", atores='" + atores + '\'' +
         ", poster='" + poster + '\'' +
         ", sinopse='" + sinopse + '\'';
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public List<Episodio> getEpisodios() {
+    return episodios;
+  }
+
+  public void setEpisodios(List<Episodio> episodios) {
+    this.episodios = episodios;
   }
 }
