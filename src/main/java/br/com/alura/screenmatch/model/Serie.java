@@ -9,8 +9,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
@@ -20,17 +22,22 @@ public class Serie {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Column(unique = true)
   private String titulo;
+
   private Integer totalTemporadas;
   private Double avaliacao;
+
   @Enumerated(EnumType.STRING)
   private Categoria genero;
+
   private String atores;
   private String poster;
   private String sinopse;
-  @Transient
-  private List<Episodio> episodios;
+
+  @OneToMany(mappedBy = "serie")
+  private List<Episodio> episodios = new ArrayList<>();
 
   public Serie (DadosSerie dadoSerie) {
     this.titulo = dadoSerie.titulo();
