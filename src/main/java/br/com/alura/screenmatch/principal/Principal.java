@@ -49,6 +49,7 @@ public class Principal {
                 10 - Desafio busca detalhada jpql
                 11 - Busca episodio por trecho
                 12 - Top episodios por série
+                13 - Buscar episodios depois de uma data
                 
                 0 - Sair
                 """;
@@ -94,12 +95,32 @@ public class Principal {
                 case 12:
                     buscaTopEpisodiosPorSerie();
                     break;
+                case 13:
+                    buscarEpisodioDepoisDeUmaData();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida");
             }
+        }
+    }
+
+    private void buscarEpisodioDepoisDeUmaData() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+
+            System.out.println("Digite o ano limite de lançamento: ");
+            int ano = leitura.nextInt();
+            leitura.nextLine();
+
+            List<Episodio> episodios = serieRepository.buscaEpisodioPorSerieEAno(serie, ano);
+            System.out.println("Episódios da série " + serie.getTitulo() + " lançados após " + ano + ": ");
+            episodios.forEach(e -> System.out.printf(
+                "Temporada: %d, episódio: %s, data de lançamento: %s%n",
+                e.getTemporada(), e.getTitulo(), e.getDataLancamento()));
         }
     }
 
