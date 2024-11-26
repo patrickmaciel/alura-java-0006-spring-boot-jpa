@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
@@ -41,6 +42,8 @@ public class Principal {
                 4 - Buscar serie por titulo
                 5 - Buscar séries por ator
                 6 - Top 5 series
+                7 - Séries por categoria
+                8 - Desafio busca detalhada
                 
                 0 - Sair
                 """;
@@ -68,6 +71,12 @@ public class Principal {
                 case 6:
                     buscarTop5Series();
                     break;
+                case 7:
+                    buscarSeriesPorCategoria();
+                    break;
+                case 8:
+                    desafioBuscaDetalhada();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -75,6 +84,27 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void desafioBuscaDetalhada() {
+        // series até quantas temporadas
+        System.out.println("Digite o número de temporadas máximo: ");
+        int numeroTemporadas = leitura.nextInt();
+        // e que tem avaliação maior que X
+        System.out.println("Digite a avaliação mínima: ");
+        Double avaliacao = leitura.nextDouble();
+        List<Serie> seriesBuscadas = serieRepository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(numeroTemporadas, avaliacao);
+        System.out.println("Séries encontradas com até " + numeroTemporadas + " temporadas e avaliação maior que " + avaliacao + ": ");
+        seriesBuscadas.forEach(s -> System.out.println(s.getTitulo() + ", temporadas: " + s.getTotalTemporadas() + ", avaliacao: " + s.getAvaliacao()));
+    }
+
+    private void buscarSeriesPorCategoria() {
+        System.out.println("Digite o nome do gênero: ");
+        String genero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(genero);
+        List<Serie> series = serieRepository.findByGenero(categoria);
+        System.out.println("Séries encontradas no gênero " + genero + ": ");
+        series.forEach(s -> System.out.println(s.getTitulo()));
     }
 
     private void buscarTop5Series() {
