@@ -45,6 +45,7 @@ public class Principal {
                 7 - Séries por categoria
                 8 - Desafio busca detalhada
                 9 - Desafio busca detalhada query
+                10 - Desafio busca detalhada jpql
                 
                 0 - Sair
                 """;
@@ -81,6 +82,9 @@ public class Principal {
                 case 9:
                     desafioBuscaDetalhadaQuery();
                     break;
+                case 10:
+                    desafioBuscaDetalhadaQueryJpql();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -110,6 +114,18 @@ public class Principal {
         Double avaliacao = leitura.nextDouble();
 
         List<Serie> seriesBuscadas = serieRepository.seriesPorTemporadaEAvaliacao(numeroTemporadas, avaliacao);
+        System.out.println("Séries encontradas com até " + numeroTemporadas + " temporadas e avaliação maior que " + avaliacao + ": ");
+        seriesBuscadas.forEach(s -> System.out.println(s.getTitulo() + ", temporadas: " + s.getTotalTemporadas() + ", avaliacao: " + s.getAvaliacao()));
+    }
+
+    private void desafioBuscaDetalhadaQueryJpql() {
+        System.out.println("Digite o número de temporadas máximo: ");
+        int numeroTemporadas = leitura.nextInt();
+
+        System.out.println("Digite a avaliação mínima: ");
+        Double avaliacao = leitura.nextDouble();
+
+        List<Serie> seriesBuscadas = serieRepository.seriesPorTemporadaEAvaliacaoUsandoJPQL(numeroTemporadas, avaliacao);
         System.out.println("Séries encontradas com até " + numeroTemporadas + " temporadas e avaliação maior que " + avaliacao + ": ");
         seriesBuscadas.forEach(s -> System.out.println(s.getTitulo() + ", temporadas: " + s.getTotalTemporadas() + ", avaliacao: " + s.getAvaliacao()));
     }

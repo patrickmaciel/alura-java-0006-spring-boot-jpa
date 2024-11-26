@@ -20,4 +20,8 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
   @Query(value = "SELECT * FROM series s WHERE s.total_temporadas <= :numeroTemporadas AND s.avaliacao >= :avaliacao", nativeQuery = true)
   List<Serie> seriesPorTemporadaEAvaliacao(int numeroTemporadas, Double avaliacao);
+
+  // JPQL - Java Persistence Query Language
+  @Query("SELECT s FROM Serie s WHERE s.totalTemporadas <= :numeroTemporadas AND s.avaliacao >= :avaliacao")
+  List<Serie> seriesPorTemporadaEAvaliacaoUsandoJPQL(int numeroTemporadas, Double avaliacao);
 }
