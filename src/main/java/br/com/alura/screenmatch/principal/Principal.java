@@ -26,6 +26,7 @@ public class Principal {
     private List<DadosSerie> dadosSeries = new ArrayList<>();
     private SerieRepository serieRepository;
     private List<Serie> series = new ArrayList<>();
+    private Optional<Serie> serieBuscada;
 
     public Principal(SerieRepository serieRepository) {
         this.serieRepository = serieRepository;
@@ -46,6 +47,8 @@ public class Principal {
                 8 - Desafio busca detalhada
                 9 - Desafio busca detalhada query
                 10 - Desafio busca detalhada jpql
+                11 - Busca episodio por trecho
+                12 - Top episodios por série
                 
                 0 - Sair
                 """;
@@ -85,6 +88,12 @@ public class Principal {
                 case 10:
                     desafioBuscaDetalhadaQueryJpql();
                     break;
+                case 11:
+                    buscaEpisodioPorTrecho();
+                    break;
+                case 12:
+                    buscaTopEpisodiosPorSerie();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -92,6 +101,27 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void buscaTopEpisodiosPorSerie() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            List<Episodio> episodios = serieRepository.buscaTopEpisodiosPorSerie(serie);
+            System.out.println("Top episódios da série " + serie.getTitulo() + ": ");
+            episodios.forEach(e -> System.out.printf(
+                "Temporada: %d, episódio: %s, avaliação: %.2f%n",
+                e.getTemporada(), e.getTitulo(), e.getAvaliacao()));
+        }
+    }
+
+    private void buscaEpisodioPorTrecho() {
+        System.out.println("Digite o trecho do episódio: ");
+        String trecho = leitura.nextLine();
+        List<Episodio> episodios = serieRepository.buscaEpisodioPorTrecho(trecho);
+        System.out.println("Episódios encontrados com o trecho " + trecho + ": ");
+//        episodios.forEach(e -> System.out.println(e.getSerie().getTitulo() + ", temporada: " + e.getTemporada() + ", episódio: " + e.getTitulo()));
+        episodios.forEach(e -> System.out.printf("Serie: %s, temporada: %d, episódio: %s%n", e.getSerie().getTitulo(), e.getTemporada(), e.getTitulo()));
     }
 
     private void desafioBuscaDetalhada() {
@@ -159,7 +189,7 @@ public class Principal {
     private void buscarSeriePorTitulo() {
         System.out.println("Escolhaa série pelo nome: ");
         String nomeSerie = leitura.nextLine();
-        Optional<Serie> serieBuscada = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBuscada = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serieBuscada.isPresent()) {
             System.out.println("Dados da série: " + serieBuscada.get());

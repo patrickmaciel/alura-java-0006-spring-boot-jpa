@@ -1,6 +1,7 @@
 package br.com.alura.screenmatch.repository;
 
 import br.com.alura.screenmatch.model.Categoria;
+import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +25,10 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
   // JPQL - Java Persistence Query Language
   @Query("SELECT s FROM Serie s WHERE s.totalTemporadas <= :numeroTemporadas AND s.avaliacao >= :avaliacao")
   List<Serie> seriesPorTemporadaEAvaliacaoUsandoJPQL(int numeroTemporadas, Double avaliacao);
+
+  @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trecho%")
+  List<Episodio> buscaEpisodioPorTrecho(String trecho);
+
+  @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE s = :serie ORDER BY e.avaliacao DESC LIMIT 5")
+  List<Episodio> buscaTopEpisodiosPorSerie(Serie serie);
 }
