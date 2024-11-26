@@ -5,6 +5,7 @@ import br.com.alura.screenmatch.model.Serie;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface SerieRepository extends JpaRepository<Serie, Long> {
   Optional<Serie> findByTituloContainingIgnoreCase(String nomeSerie);
@@ -16,4 +17,7 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
   List<Serie> findByGenero(Categoria categoria);
 
   List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(int numeroTemporadas, Double avaliacao);
+
+  @Query(value = "SELECT * FROM series s WHERE s.total_temporadas <= :numeroTemporadas AND s.avaliacao >= :avaliacao", nativeQuery = true)
+  List<Serie> seriesPorTemporadaEAvaliacao(int numeroTemporadas, Double avaliacao);
 }
